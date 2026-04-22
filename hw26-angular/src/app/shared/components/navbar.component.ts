@@ -1,0 +1,77 @@
+import { Component, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { AuthService } from '../../core/services/auth.service';
+
+@Component({
+  selector: 'app-navbar',
+  standalone: true,
+  imports: [CommonModule, RouterLink, RouterLinkActive],
+  template: `
+    <nav class="navbar navbar-expand-lg sticky-top bg-white border-bottom">
+      <div class="container">
+        <a class="navbar-brand d-flex align-items-center gap-2" routerLink="/">
+          <span
+            class="d-inline-flex justify-content-center align-items-center"
+            style="width:32px;height:32px;border-radius:8px;background:var(--hw-primary);color:#fff;font-family:var(--font-serif);"
+            >h</span
+          >
+          <span class="serif fs-3">hw26</span>
+        </a>
+
+        <button
+          class="navbar-toggler"
+          type="button"
+          (click)="open = !open"
+          [attr.aria-expanded]="open"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" [class.show]="open">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="open = false">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/properties" routerLinkActive="active" (click)="open = false">Annunci</a>
+            </li>
+            @if (auth.hasRole('SELLER', 'ADMIN')) {
+              <li class="nav-item">
+                <a class="nav-link" routerLink="/seller" routerLinkActive="active" (click)="open = false">I miei annunci</a>
+              </li>
+            }
+            @if (auth.hasRole('ADMIN')) {
+              <li class="nav-item">
+                <a class="nav-link" routerLink="/admin" routerLinkActive="active" (click)="open = false">Amministrazione</a>
+              </li>
+            }
+          </ul>
+
+          <div class="d-flex align-items-center gap-2">
+            @if (auth.isLoggedIn()) {
+              <span class="muted small d-none d-md-inline">
+                Ciao, <strong>{{ auth.user()?.username }}</strong>
+                <span class="hw-badge ms-2">{{ auth.user()?.role }}</span>
+              </span>
+              <button class="btn btn-hw-outline btn-sm" (click)="logout()">Esci</button>
+            } @else {
+              <a routerLink="/login" class="btn btn-hw-outline btn-sm">Accedi</a>
+              <a routerLink="/register" class="btn btn-hw btn-sm">Registrati</a>
+            }
+          </div>
+        </div>
+      </div>
+    </nav>
+  `,
+})
+export class NavbarComponent {
+  protected auth = inject(AuthService);
+  private router = inject(Router);
+  protected open = false;
+
+  logout(): void {
+    this.auth.logout();
+    this.router.navigate(['/']);
+  }
+}
