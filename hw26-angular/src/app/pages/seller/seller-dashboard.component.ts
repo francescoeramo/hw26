@@ -107,6 +107,7 @@ export class SellerDashboardComponent implements OnInit {
   catLabel(p: Property): string {
     return CATEGORY_LABELS[p.category] ?? p.category;
   }
+
   listingLabel(p: Property): string {
     return LISTING_TYPE_LABELS[p.listingType] ?? p.listingType;
   }
@@ -118,8 +119,8 @@ export class SellerDashboardComponent implements OnInit {
 
   lower(p: Property): void {
     const v = prompt(
-      `Nuovo prezzo per "${p.title}" (attuale: ${p.price} €)`,
-      String(p.price - 1000)
+        `Nuovo prezzo per "${p.title}" (attuale: ${p.price} €)`,
+        String(p.price - 1000)
     );
     if (!v) return;
     const n = Number(v);
@@ -136,21 +137,22 @@ export class SellerDashboardComponent implements OnInit {
     const days = prompt('Durata in giorni', '7');
     if (!days) return;
     const endsAt = new Date(
-      Date.now() + Number(days) * 86400000
+        Date.now() + Number(days) * 86400000
     ).toISOString();
     this.auc
-      .create(p.id, { startPrice: Number(start), endsAt })
-      .subscribe({
-        next: () => this.msg.set('Asta creata.'),
-        error: () => this.msg.set('Errore creazione asta.'),
-      });
+        .create(p.id, { startPrice: Number(start), endsAt })
+        .subscribe({
+          next: () => this.msg.set('Asta creata.'),
+          error: () => this.msg.set('Errore creazione asta.'),
+        });
   }
 
   promote(p: Property): void {
     this.svc.promoteOnFacebook(p.id).subscribe({
-      next: (r) => this.msg.set('Pubblicato su Facebook: ' + r.postUrl),
+      next: (r: { postUrl: string }) =>
+          this.msg.set('Pubblicato su Facebook: ' + r.postUrl),
       error: () =>
-        this.msg.set('Promozione non riuscita. Configura le credenziali Facebook lato backend.'),
+          this.msg.set('Promozione non riuscita. Configura le credenziali Facebook lato backend.'),
     });
   }
 }

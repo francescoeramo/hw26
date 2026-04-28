@@ -1,21 +1,22 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Property, PropertyFilters } from '../models';
 import { environment } from '../../../environments/environment';
-import { Property, PropertyFilters, ContactRequest } from '../models';
 
 @Injectable({ providedIn: 'root' })
 export class PropertyService {
   private http = inject(HttpClient);
-  private base = `${environment.apiUrl}/properties`;
+  private base = `${environment.apiUrl}/posts`;
 
   list(filters: PropertyFilters = {}): Observable<Property[]> {
     let params = new HttpParams();
-    Object.entries(filters).forEach(([k, v]) => {
-      if (v !== undefined && v !== null && v !== '') {
-        params = params.set(k, String(v));
-      }
-    });
+    if (filters.q)           params = params.set('q', filters.q);
+    if (filters.category)    params = params.set('category', filters.category);
+    if (filters.listingType) params = params.set('listingType', filters.listingType);
+    if (filters.minPrice)    params = params.set('minPrice', filters.minPrice);
+    if (filters.maxPrice)    params = params.set('maxPrice', filters.maxPrice);
+    if (filters.sort)        params = params.set('sort', filters.sort);
     return this.http.get<Property[]>(this.base, { params });
   }
 
@@ -35,27 +36,15 @@ export class PropertyService {
     return this.http.delete<void>(`${this.base}/${id}`);
   }
 
-  /** Ribasso del prezzo: il backend conserverà il vecchio prezzo */
-  lowerPrice(id: number, newPrice: number): Observable<Property> {
-    return this.http.patch<Property>(`${this.base}/${id}/lower-price`, {
-      price: newPrice,
-    });
-  }
-
-  /** Annunci del venditore loggato */
   mine(): Observable<Property[]> {
     return this.http.get<Property[]>(`${this.base}/mine`);
   }
 
-  contactSeller(req: ContactRequest): Observable<void> {
-    return this.http.post<void>(`${this.base}/${req.propertyId}/contact`, req);
+  lowerPrice(id: number, newPrice: number): Observable<Property> {
+    return this.http.patch<Property>(`${this.base}/${id}/reduce-price`, { price: newPrice });
   }
 
-  /** Promozione su pagina Facebook (lato backend chiamerà Graph API) */
   promoteOnFacebook(id: number): Observable<{ postUrl: string }> {
-    return this.http.post<{ postUrl: string }>(
-      `${this.base}/${id}/promote/facebook`,
-      {}
-    );
+    return this.http.post<{ postUrl: string }>(`${this.base}/${id}/promote`, {});
   }
 }

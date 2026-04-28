@@ -16,8 +16,8 @@ import { AuthService } from '../../core/services/auth.service';
 
         <form (ngSubmit)="submit()" #f="ngForm" class="bg-white p-4 rounded-3 border">
           <div class="mb-3">
-            <label class="form-label small text-uppercase muted">Username</label>
-            <input class="form-control" name="username" [(ngModel)]="username" required>
+            <label class="form-label small text-uppercase muted">Email</label>
+            <input type="email" class="form-control" name="email" [(ngModel)]="email" required>
           </div>
           <div class="mb-3">
             <label class="form-label small text-uppercase muted">Password</label>
@@ -41,7 +41,7 @@ export class LoginComponent {
   private auth = inject(AuthService);
   private router = inject(Router);
 
-  protected username = '';
+  protected email = '';
   protected password = '';
   protected loading = signal(false);
   protected error = signal<string | null>(null);
@@ -49,7 +49,7 @@ export class LoginComponent {
   submit(): void {
     this.loading.set(true);
     this.error.set(null);
-    this.auth.login({ username: this.username, password: this.password }).subscribe({
+    this.auth.login({ email: this.email, password: this.password }).subscribe({
       next: () => this.router.navigate(['/']),
       error: (err) => {
         this.error.set(err?.error?.message ?? 'Credenziali non valide');

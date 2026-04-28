@@ -9,12 +9,12 @@ export interface User {
 }
 
 export type PropertyCategory =
-  | 'APARTMENT'
-  | 'VILLA'
-  | 'HOUSE'
-  | 'GARAGE'
-  | 'LAND'
-  | 'COMMERCIAL';
+    | 'APARTMENT'
+    | 'VILLA'
+    | 'HOUSE'
+    | 'GARAGE'
+    | 'LAND'
+    | 'COMMERCIAL';
 
 export type ListingType = 'SALE' | 'RENT';
 
@@ -80,16 +80,20 @@ export interface AuthResponse {
   user: User;
 }
 
+// ← usa email invece di username per il login (il backend vuole email)
 export interface LoginRequest {
-  username: string;
+  email: string;
   password: string;
 }
 
 export interface RegisterRequest {
-  username: string;
+  name: string;
+  surname: string;
   email: string;
   password: string;
+  birthDate: string;       // formato ISO: "1990-01-15"
   role: 'SELLER' | 'BUYER';
+  vatNumber?: string;      // solo per SELLER
 }
 
 export interface PropertyFilters {

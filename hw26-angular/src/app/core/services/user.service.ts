@@ -1,13 +1,13 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { User, Role } from '../models';
 import { environment } from '../../../environments/environment';
-import { Role, User } from '../models';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
   private http = inject(HttpClient);
-  private base = `${environment.apiUrl}/users`;
+  private base = `${environment.apiUrl}/admin/users`;
 
   list(): Observable<User[]> {
     return this.http.get<User[]>(this.base);
