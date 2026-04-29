@@ -39,7 +39,7 @@ export class AuthService {
     const endpoint = req.role === 'SELLER'
         ? `${this.base}/register/seller`
         : `${this.base}/register/user`;
-    return this.http.post<void>(endpoint, req);
+    return this.http.post<void>(endpoint, req, { responseType: 'text' as 'json' });
   }
 
   logout(): void {

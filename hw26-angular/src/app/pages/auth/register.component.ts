@@ -34,8 +34,17 @@ import { AuthService } from '../../core/services/auth.service';
 
           <div class="mb-3">
             <label class="form-label small text-uppercase muted">Password</label>
-            <input type="password" class="form-control" name="password"
-                   [(ngModel)]="password" required minlength="8">
+            <div class="input-group">
+              <input [type]="showPassword() ? 'text' : 'password'"
+                     class="form-control" name="password"
+                     [(ngModel)]="password" required minlength="8">
+              <button type="button" class="btn btn-outline-secondary"
+                      (click)="showPassword.set(!showPassword())"
+                      [attr.aria-label]="showPassword() ? 'Nascondi password' : 'Mostra password'">
+                <img [src]="showPassword() ? 'assets/icone/eye.png' : 'assets/icone/show.png'"
+                     width="20" height="20" alt="">
+              </button>
+            </div>
             <div class="form-text small text-muted mt-1">
               Min. 8 caratteri, una maiuscola, una minuscola, un numero e un carattere speciale
               (es. <code>!</code> <code>&#64;</code> <code>#</code>).
@@ -82,9 +91,8 @@ import { AuthService } from '../../core/services/auth.service';
 
           <button type="submit" class="btn btn-hw w-100"
                   [disabled]="loading() || f.invalid || success()">
-            {{ loading() ? 'Attendere...' : 'Crea account' }}
+            {{ loading() ? 'Attendere...' : success() ? 'Registrato!' : 'Crea account' }}
           </button>
-
           <p class="text-center mt-3 mb-0 small muted">
             Hai già un account? <a routerLink="/login">Accedi</a>
           </p>
@@ -105,30 +113,30 @@ export class RegisterComponent {
   protected vatNumber = '';
   protected role: 'SELLER' | 'BUYER' = 'BUYER';
 
-  protected loading = signal(false);
-  protected errors  = signal<string[]>([]);
-  protected success = signal(false);
+  protected loading      = signal(false);
+  protected errors       = signal<string[]>([]);
+  protected success      = signal(false);
+  protected showPassword = signal(false);
 
   submit(): void {
     this.loading.set(true);
     this.errors.set([]);
 
     this.auth.register({
-      name:       this.name,
-      surname:    this.surname,
-      email:      this.email,
-      password:   this.password,
-      birthDate:  this.birthDate,
-      role:       this.role,
-      vatNumber:  this.role === 'SELLER' ? this.vatNumber : undefined,
+      name:      this.name,
+      surname:   this.surname,
+      email:     this.email,
+      password:  this.password,
+      birthDate: this.birthDate,
+      role:      this.role,
+      vatNumber: this.role === 'SELLER' ? this.vatNumber : undefined,
     }).subscribe({
       next: () => {
+        this.loading.set(false);  // ← prima di success
         this.success.set(true);
-        this.loading.set(false);
         setTimeout(() => this.router.navigate(['/login']), 2000);
       },
       error: (err) => {
-        // il backend restituisce una stringa con \n tra gli errori
         const raw: string = err?.error ?? err?.message ?? 'Registrazione non riuscita';
         this.errors.set(
             raw.split('\n').map((s: string) => s.trim()).filter((s: string) => s.length > 0)

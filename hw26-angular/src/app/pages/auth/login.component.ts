@@ -19,13 +19,25 @@ import { AuthService } from '../../core/services/auth.service';
             <label class="form-label small text-uppercase muted">Email</label>
             <input type="email" class="form-control" name="email" [(ngModel)]="email" required>
           </div>
+
           <div class="mb-3">
             <label class="form-label small text-uppercase muted">Password</label>
-            <input type="password" class="form-control" name="password" [(ngModel)]="password" required>
+            <div class="input-group">
+              <input [type]="showPassword() ? 'text' : 'password'"
+                     class="form-control" name="password" [(ngModel)]="password" required>
+              <button type="button" class="btn btn-outline-secondary"
+                      (click)="showPassword.set(!showPassword())"
+                      [attr.aria-label]="showPassword() ? 'Nascondi password' : 'Mostra password'">
+                <img [src]="showPassword() ? 'assets/icone/eye.png' : 'assets/icone/show.png'"
+                     width="20" height="20" alt="">
+              </button>
+            </div>
           </div>
+
           @if (error()) {
             <div class="alert alert-danger py-2 small">{{ error() }}</div>
           }
+
           <button type="submit" class="btn btn-hw w-100" [disabled]="loading() || f.invalid">
             {{ loading() ? 'Attendere...' : 'Accedi' }}
           </button>
@@ -45,6 +57,7 @@ export class LoginComponent {
   protected password = '';
   protected loading = signal(false);
   protected error = signal<string | null>(null);
+  protected showPassword = signal(false);
 
   submit(): void {
     this.loading.set(true);
