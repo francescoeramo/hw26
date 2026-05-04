@@ -8,64 +8,26 @@ import { AuthService } from '../../core/services/auth.service';
   selector: 'app-login',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterLink],
-  template: `
-    <section class="page-pad">
-      <div class="container" style="max-width: 480px;">
-        <h1 class="serif mb-2">Accedi</h1>
-        <p class="muted mb-4">Bentornato su hw26.</p>
-
-        <form (ngSubmit)="submit()" #f="ngForm" class="bg-white p-4 rounded-3 border">
-          <div class="mb-3">
-            <label class="form-label small text-uppercase muted">Email</label>
-            <input type="email" class="form-control" name="email" [(ngModel)]="email" required>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label small text-uppercase muted">Password</label>
-            <div class="input-group">
-              <input [type]="showPassword() ? 'text' : 'password'"
-                     class="form-control" name="password" [(ngModel)]="password" required>
-              <button type="button" class="btn btn-outline-secondary"
-                      (click)="showPassword.set(!showPassword())"
-                      [attr.aria-label]="showPassword() ? 'Nascondi password' : 'Mostra password'">
-                <img [src]="showPassword() ? 'assets/icone/eye.png' : 'assets/icone/show.png'"
-                     width="20" height="20" alt="">
-              </button>
-            </div>
-          </div>
-
-          @if (error()) {
-            <div class="alert alert-danger py-2 small">{{ error() }}</div>
-          }
-
-          <button type="submit" class="btn btn-hw w-100" [disabled]="loading() || f.invalid">
-            {{ loading() ? 'Attendere...' : 'Accedi' }}
-          </button>
-          <p class="text-center mt-3 mb-0 small muted">
-            Non hai un account? <a routerLink="/register">Registrati</a>
-          </p>
-        </form>
-      </div>
-    </section>
-  `,
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
-  private auth = inject(AuthService);
+  private auth   = inject(AuthService);
   private router = inject(Router);
 
-  protected email = '';
-  protected password = '';
-  protected loading = signal(false);
-  protected error = signal<string | null>(null);
+  protected email        = '';
+  protected password     = '';
   protected showPassword = signal(false);
+  protected error        = signal<string | null>(null);
+  protected loading      = signal(false);
 
   submit(): void {
     this.loading.set(true);
     this.error.set(null);
     this.auth.login({ email: this.email, password: this.password }).subscribe({
       next: () => this.router.navigate(['/']),
-      error: (err) => {
-        this.error.set(err?.error?.message ?? 'Credenziali non valide');
+      error: (e) => {
+        this.error.set(e?.error?.message ?? 'Credenziali non valide.');
         this.loading.set(false);
       },
     });

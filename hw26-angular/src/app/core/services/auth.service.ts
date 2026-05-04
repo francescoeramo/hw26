@@ -4,33 +4,31 @@ import { Observable, switchMap, tap } from 'rxjs';
 import { AuthResponse, LoginRequest, RegisterRequest, Role, User } from '../models';
 import { environment } from '../../../environments/environment';
 
-const USER_KEY = 'hw26_user';
+const USER_KEY  = 'hw26_user';
 const TOKEN_KEY = 'hw26_token';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private http = inject(HttpClient);
-  private base = `${environment.apiUrl}/auth`;
+  private http  = inject(HttpClient);
+  private base  = `${environment.apiUrl}/auth`;
 
-  private _user = signal<User | null>(this.loadUser());
+  private _user  = signal<User | null>(this.loadUser());
   private _token = signal<string | null>(localStorage.getItem(TOKEN_KEY));
 
-  readonly user = this._user.asReadonly();
-  readonly token = this._token.asReadonly();
+  readonly user      = this._user.asReadonly();
+  readonly token     = this._token.asReadonly();
   readonly isLoggedIn = computed(() => this._user() !== null);
-  readonly role = computed<Role | null>(() => this._user()?.role ?? null);
+  readonly role       = computed<Role | null>(() => this._user()?.role ?? null);
 
   login(req: LoginRequest): Observable<User> {
     return this.http.post<{ token: string }>(`${this.base}/login`, {
       email: req.email,
       password: req.password,
     }).pipe(
-        switchMap((res: { token: string }) =>
+        switchMap((res) =>
             this.http.get<User>(`${this.base}/me`, {
               headers: { Authorization: `Bearer ${res.token}` },
-            }).pipe(
-                tap((user: User) => this.persist({ token: res.token, user }))
-            )
+            }).pipe(tap((user) => this.persist({ token: res.token, user })))
         )
     );
   }

@@ -17,6 +17,8 @@ export class PropertyService {
     if (filters.minPrice)    params = params.set('minPrice', filters.minPrice);
     if (filters.maxPrice)    params = params.set('maxPrice', filters.maxPrice);
     if (filters.sort)        params = params.set('sort', filters.sort);
+    if (filters.city)        params = params.set('city', filters.city);
+    if (filters.minSquareMeters) params = params.set('minSquareMeters', filters.minSquareMeters);
     return this.http.get<Property[]>(this.base, { params });
   }
 

@@ -9,7 +9,7 @@ export class ReviewService {
   private http = inject(HttpClient);
   private base = `${environment.apiUrl}/reviews`;
 
-  getByProperty(propertyId: number): Observable<Review[]> {
+  list(propertyId: number): Observable<Review[]> {
     return this.http.get<Review[]>(`${this.base}/property/${propertyId}`);
   }
 

@@ -10,25 +10,15 @@ export class AuctionService {
   private base = environment.apiUrl;
 
   byProperty(propertyId: number): Observable<Auction | null> {
-    return this.http.get<Auction | null>(
-      `${this.base}/properties/${propertyId}/auction`
-    );
+    return this.http.get<Auction | null>(`${this.base}/properties/${propertyId}/auction`);
   }
 
-  create(
-    propertyId: number,
-    payload: { startPrice: number; endsAt: string }
-  ): Observable<Auction> {
-    return this.http.post<Auction>(
-      `${this.base}/properties/${propertyId}/auction`,
-      payload
-    );
+  create(propertyId: number, payload: { startPrice: number; endsAt: string }): Observable<Auction> {
+    return this.http.post<Auction>(`${this.base}/properties/${propertyId}/auction`, payload);
   }
 
   placeBid(auctionId: number, amount: number): Observable<Bid> {
-    return this.http.post<Bid>(`${this.base}/auctions/${auctionId}/bids`, {
-      amount,
-    });
+    return this.http.post<Bid>(`${this.base}/auctions/${auctionId}/bids`, { amount });
   }
 
   bids(auctionId: number): Observable<Bid[]> {
@@ -36,9 +26,6 @@ export class AuctionService {
   }
 
   close(auctionId: number): Observable<Auction> {
-    return this.http.post<Auction>(
-      `${this.base}/auctions/${auctionId}/close`,
-      {}
-    );
+    return this.http.post<Auction>(`${this.base}/auctions/${auctionId}/close`, {});
   }
 }

@@ -5,25 +5,8 @@ import { RouterLink } from '@angular/router';
   selector: 'app-footer',
   standalone: true,
   imports: [RouterLink],
-  template: `
-    <footer class="border-top bg-white mt-5">
-      <div class="container py-4">
-        <div class="row gy-3 align-items-center">
-          <div class="col-md-6">
-            <div class="serif fs-4">hw26</div>
-            <p class="muted small mb-0">
-              Annunci di vendita e affitto di immobili in Italia.
-            </p>
-          </div>
-          <div class="col-md-6 text-md-end small muted">
-            <a routerLink="/properties" class="me-3">Annunci</a>
-            <a routerLink="/login" class="me-3">Accedi</a>
-            <span>&copy; {{ year }} hw26 — Progetto universitario</span>
-          </div>
-        </div>
-      </div>
-    </footer>
-  `,
+  templateUrl: './footer.component.html',
+  styleUrls: ['./footer.component.css'],
 })
 export class FooterComponent {
   protected readonly year = new Date().getFullYear();
