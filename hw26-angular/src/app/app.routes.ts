@@ -6,33 +6,32 @@ export const routes: Routes = [
   {
     path: '',
     loadComponent: () =>
-      import('./pages/home/home.component').then((m) => m.HomeComponent),
+        import('./pages/home/home.component').then(m => m.HomeComponent),
   },
   {
     path: 'login',
     loadComponent: () =>
-      import('./pages/auth/login.component').then((m) => m.LoginComponent),
+        import('./pages/auth/login.component').then(m => m.LoginComponent),
   },
   {
     path: 'register',
     loadComponent: () =>
-      import('./pages/auth/register.component').then(
-        (m) => m.RegisterComponent
-      ),
+        import('./pages/auth/register.component').then(m => m.RegisterComponent),
+  },
+  {
+    path: 'forgot-password',
+    loadComponent: () =>
+        import('./pages/auth/forgot-password.component').then(m => m.ForgotPasswordComponent),
   },
   {
     path: 'properties',
     loadComponent: () =>
-      import('./pages/properties/property-list.component').then(
-        (m) => m.PropertyListComponent
-      ),
+        import('./pages/properties/property-list.component').then(m => m.PropertyListComponent),
   },
   {
     path: 'properties/:id',
     loadComponent: () =>
-      import('./pages/properties/property-detail.component').then(
-        (m) => m.PropertyDetailComponent
-      ),
+        import('./pages/properties/property-detail.component').then(m => m.PropertyDetailComponent),
   },
   {
     path: 'seller',
@@ -41,23 +40,17 @@ export const routes: Routes = [
       {
         path: '',
         loadComponent: () =>
-          import('./pages/seller/seller-dashboard.component').then(
-            (m) => m.SellerDashboardComponent
-          ),
+            import('./pages/seller/seller-dashboard.component').then(m => m.SellerDashboardComponent),
       },
       {
         path: 'new',
         loadComponent: () =>
-          import('./pages/seller/property-edit.component').then(
-            (m) => m.PropertyEditComponent
-          ),
+            import('./pages/seller/property-edit.component').then(m => m.PropertyEditComponent),
       },
       {
         path: 'edit/:id',
         loadComponent: () =>
-          import('./pages/seller/property-edit.component').then(
-            (m) => m.PropertyEditComponent
-          ),
+            import('./pages/seller/property-edit.component').then(m => m.PropertyEditComponent),
       },
     ],
   },
@@ -65,15 +58,11 @@ export const routes: Routes = [
     path: 'admin',
     canActivate: [roleGuard('ADMIN')],
     loadComponent: () =>
-      import('./pages/admin/admin-dashboard.component').then(
-        (m) => m.AdminDashboardComponent
-      ),
+        import('./pages/admin/admin-dashboard.component').then(m => m.AdminDashboardComponent),
   },
   {
     path: '**',
     loadComponent: () =>
-      import('./pages/not-found/not-found.component').then(
-        (m) => m.NotFoundComponent
-      ),
+        import('./pages/not-found/not-found.component').then(m => m.NotFoundComponent),
   },
 ];

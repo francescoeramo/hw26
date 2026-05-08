@@ -17,6 +17,7 @@ export interface RegisterRequest {
     password: string;
     birthDate: string;
     role: 'SELLER' | 'BUYER';
+    otp: string;
     vatNumber?: string;
 }
 

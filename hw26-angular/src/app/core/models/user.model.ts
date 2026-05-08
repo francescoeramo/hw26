@@ -2,7 +2,8 @@ export type Role = 'ADMIN' | 'SELLER' | 'BUYER';
 
 export interface User {
     id: number;
-    username: string;
+    name: string;
+    surname: string;
     email: string;
     role: Role;
     banned: boolean;

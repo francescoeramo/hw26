@@ -18,12 +18,35 @@
                 </div>
             </div>
 
+            <!-- Email + bottone OTP -->
             <div class="mb-3">
                 <label class="form-label small text-uppercase muted">Email</label>
-                <input type="email" class="form-control" name="email"
-                       [(ngModel)]="email" required>
+                <div class="input-group">
+                    <input type="email" class="form-control" name="email"
+                           [(ngModel)]="email" required>
+                    <button type="button" class="btn btn-hw-outline"
+                            (click)="requestOtp()" [disabled]="otpLoading() || !email">
+                        {{ otpLoading() ? '...' : otpSent() ? 'Invia di nuovo' : 'Invia OTP' }}
+                    </button>
+                </div>
+                @if (otpMsg()) {
+                    <div class="form-text mt-1"
+                         [class.text-success]="otpSent()"
+                         [class.text-danger]="!otpSent()">
+                        {{ otpMsg() }}
+                    </div>
+                }
             </div>
 
+            <!-- Codice OTP -->
+            <div class="mb-3">
+                <label class="form-label small text-uppercase muted">Codice OTP</label>
+                <input type="text" class="form-control" name="otp"
+                       [(ngModel)]="otp" required
+                       placeholder="Inserisci il codice ricevuto via email">
+            </div>
+
+            <!-- Password -->
             <div class="mb-3">
                 <label class="form-label small text-uppercase muted">Password</label>
                 <div class="input-group">
@@ -32,7 +55,7 @@
                            [(ngModel)]="password" required minlength="8">
                     <button type="button" class="btn btn-outline-secondary"
                             (click)="showPassword.set(!showPassword())"
-                            [attr.aria-label]="showPassword() ? 'Nascondi password' : 'Mostra password'">
+                            aria-label="Mostra/nascondi password">
                         <img [src]="showPassword() ? 'assets/icone/eye.png' : 'assets/icone/show.png'"
                              width="20" height="20" alt="">
                     </button>
@@ -43,12 +66,33 @@
                 </div>
             </div>
 
+            <!-- Conferma password -->
+            <div class="mb-3">
+                <label class="form-label small text-uppercase muted">Conferma password</label>
+                <div class="input-group">
+                    <input [type]="showConfirm() ? 'text' : 'password'"
+                           class="form-control" name="confirmPassword"
+                           [(ngModel)]="confirmPassword" required>
+                    <button type="button" class="btn btn-outline-secondary"
+                            (click)="showConfirm.set(!showConfirm())"
+                            aria-label="Mostra/nascondi conferma">
+                        <img [src]="showConfirm() ? 'assets/icone/eye.png' : 'assets/icone/show.png'"
+                             width="20" height="20" alt="">
+                    </button>
+                </div>
+                @if (confirmPassword && password !== confirmPassword) {
+                    <div class="form-text text-danger mt-1">Le password non coincidono.</div>
+                }
+            </div>
+
+            <!-- Data di nascita -->
             <div class="mb-3">
                 <label class="form-label small text-uppercase muted">Data di nascita</label>
                 <input type="date" class="form-control" name="birthDate"
                        [(ngModel)]="birthDate" required>
             </div>
 
+            <!-- Ruolo -->
             <div class="mb-3">
                 <label class="form-label small text-uppercase muted">Ruolo</label>
                 <select class="form-select" name="role" [(ngModel)]="role">
@@ -83,13 +127,14 @@
             }
 
             <button type="submit" class="btn btn-hw w-100"
-                    [disabled]="loading() || f.invalid || success()">
+                    [disabled]="loading() || f.invalid || success() || password !== confirmPassword">
                 {{ loading() ? 'Attendere...' : success() ? 'Registrato!' : 'Crea account' }}
             </button>
 
             <p class="text-center mt-3 mb-0 small muted">
                 Hai già un account? <a routerLink="/login">Accedi</a>
             </p>
+
         </form>
     </div>
 </section>

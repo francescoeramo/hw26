@@ -45,7 +45,7 @@
             <div class="d-flex align-items-center gap-2">
                 @if (auth.isLoggedIn()) {
                     <span class="user-info d-none d-md-inline">
-            Ciao, <strong>{{ auth.user()?.username }}</strong>
+            Ciao, <strong>{{ auth.user()?.name }} {{ auth.user()?.surname }}</strong>
             <span class="hw-badge ms-2">{{ auth.user()?.role }}</span>
           </span>
                     <button class="btn btn-hw-outline btn-sm" (click)="logout()">Esci</button>

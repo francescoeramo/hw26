@@ -9,14 +9,14 @@ const TOKEN_KEY = 'hw26_token';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private http  = inject(HttpClient);
-  private base  = `${environment.apiUrl}/auth`;
+  private http = inject(HttpClient);
+  private base = `${environment.apiUrl}/auth`;
 
   private _user  = signal<User | null>(this.loadUser());
   private _token = signal<string | null>(localStorage.getItem(TOKEN_KEY));
 
-  readonly user      = this._user.asReadonly();
-  readonly token     = this._token.asReadonly();
+  readonly user       = this._user.asReadonly();
+  readonly token      = this._token.asReadonly();
   readonly isLoggedIn = computed(() => this._user() !== null);
   readonly role       = computed<Role | null>(() => this._user()?.role ?? null);
 
@@ -38,6 +38,21 @@ export class AuthService {
         ? `${this.base}/register/seller`
         : `${this.base}/register/user`;
     return this.http.post<void>(endpoint, req, { responseType: 'text' as 'json' });
+  }
+
+  requestRegistrationOtp(email: string): Observable<string> {
+    return this.http.post<string>(`${this.base}/register/request-otp`,
+        { email }, { responseType: 'text' as 'json' });
+  }
+
+  forgotPassword(email: string): Observable<string> {
+    return this.http.post<string>(`${this.base}/forgot-password`,
+        { email }, { responseType: 'text' as 'json' });
+  }
+
+  resetPassword(email: string, otp: string, newPassword: string): Observable<string> {
+    return this.http.post<string>(`${this.base}/reset-password`,
+        { email, otp, newPassword }, { responseType: 'text' as 'json' });
   }
 
   logout(): void {

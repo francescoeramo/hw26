@@ -27,9 +27,7 @@ export class AdminDashboardComponent implements OnInit {
     this.propSvc.list().subscribe({ next: (r) => this.properties.set(r) });
   }
 
-  roleLabel(r: Role): string {
-    return ROLE_LABELS[r];
-  }
+  roleLabel(r: Role): string { return ROLE_LABELS[r]; }
 
   toggleBan(u: User): void {
     this.userSvc.ban(u.id, !u.banned).subscribe({
@@ -44,7 +42,7 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   deleteUser(u: User): void {
-    if (!confirm(`Eliminare ${u.username}?`)) return;
+    if (!confirm(`Eliminare ${u.name} ${u.surname}?`)) return;
     this.userSvc.delete(u.id).subscribe({
       next: () => this.users.update((arr) => arr.filter((x) => x.id !== u.id)),
     });
